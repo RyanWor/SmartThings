@@ -21,11 +21,18 @@ preferences{
 //    section("Automatically unlock the door when open...") {
 //        input "secondsLater", "number", title: "Delay (in seconds):", required: true
 //    }
-    section( "Notifications" ) {
-		input "sendPushMessage", "enum", title: "Send a push notification?", metadata:[values:["Yes", "No"]], required: false
+//    section( "Notifications" ) {
+//		input "sendPushMessage", "enum", title: "Send a push notification?", metadata:[values:["Yes", "No"]], required: false
+//		input "phoneNumber", "phone", title: "Enter phone number to send text notification.", required: false
+//}
+    section("Notifications") {
+        input "sendPush", "bool", required: false, // RW - Fixed broken push notification handling
+              title: "Send Push Notification?" // RW - Fixed broken push notification handling
 		input "phoneNumber", "phone", title: "Enter phone number to send text notification.", required: false
-	}
+    }
+
 }
+
 
 def installed(){
     initialize()
@@ -48,18 +55,16 @@ def initialize(){
 def lockDoor(){
     log.debug "Locking the door."
     lock1.lock()
-    log.debug ( "Sending Push Notification..." ) 
-    if ( sendPushMessage != "No" ) sendPush( "${lock1} locked after ${minutesLater} minutes!" )
-    log.debug("Sending text message...")
-    if ( phoneNumber != "0" ) sendSms( phoneNumber, "${lock1} locked after ${minutesLater} minutes!" )
+    log.debug ( "Sending Push Notification..." )
+    if (sendPush) sendPush("${lock1} locked after ${minutesLater} minutes!") // RW - Fixed broken push notification handling
+    if ( phoneNumber != "0" ) sendSms( phoneNumber, "${lock1} locked after ${minutesLater} minutes!" )            
 }
 
 def unlockDoor(){
     log.debug "Unlocking the door."
     lock1.unlock()
     log.debug ( "Sending Push Notification..." ) 
-    if ( sendPushMessage != "No" ) sendPush( "${lock1} unlocked after ${contact} was opened for ${secondsLater} seconds!" )
-    log.debug("Sending text message...")
+    if (sendPush) sendPush("${lock1} unlocked after ${contact} was opened for ${secondsLater} seconds!") // RW - Fixed broken push notification handling
     if ( phoneNumber != "0" ) sendSms( phoneNumber, "${lock1} unlocked after ${contact} was opened for ${secondsLater} seconds!" )
 }
 
