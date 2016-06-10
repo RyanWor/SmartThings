@@ -21,10 +21,6 @@ preferences{
 //    section("Automatically unlock the door when open...") {
 //        input "secondsLater", "number", title: "Delay (in seconds):", required: true
 //    }
-//    section( "Notifications" ) {
-//		input "sendPushMessage", "enum", title: "Send a push notification?", metadata:[values:["Yes", "No"]], required: false
-//		input "phoneNumber", "phone", title: "Enter phone number to send text notification.", required: false
-//}
     section("Notifications") {
         input "sendPush", "bool", required: false, // RW - Fixed broken push notification handling
               title: "Send Push Notification?" // RW - Fixed broken push notification handling
